@@ -2,6 +2,8 @@
 @author: Eyal Tuzon
 """
 from enum import Enum
+
+import mongomock
 from pymongo import MongoClient
 from pymongo.database import Database
 from pymongo.errors import ServerSelectionTimeoutError, OperationFailure
@@ -103,6 +105,8 @@ class DbClient(DbClientBase):
     _mongo_db_client: MongoClient = None
     _db: Database = None
 
+    _is_mock_db: bool = False
+
     def __init__(self, db_username: str, db_password: str, user_type: UserTypeEnum,
                  db_hostname: str = None, db_port: int = None, db_name: str = None,
                  is_tls: bool = False, is_unique: bool = True):
@@ -114,26 +118,6 @@ class DbClient(DbClientBase):
         else:
             self._create_new_connection(db_username, db_password, user_type, db_hostname,
                                         db_port, db_name, is_tls)
-
-    def _create_new_connection(self, db_username: str, db_password: str, user_type: UserTypeEnum,
-                               db_hostname: str, db_port: int, db_name: str, is_tls: bool):
-        uri = self.get_mongo_db_uri(db_username, db_password, user_type, db_hostname,
-                                    db_port, db_name, is_tls)
-        logger().debug("Connect to MongoDB using URI [" + uri + "]")
-        self._mongo_db_client = MongoClient(uri)
-        self.verify_connected_to_db()
-        self._db = self._mongo_db_client.get_database()
-
-    def _create_unique_connection(self, db_username: str, db_password: str, user_type: UserTypeEnum,
-                                  db_hostname: str, db_port: int, db_name: str, is_tls: bool):
-        key = self._get_db_client_key(db_username, user_type)
-
-        if key in DbClient._db_client_dict:
-            self.__dict__.update(DbClient._db_client_dict[key])
-        else:
-            self._create_new_connection(db_username, db_password, user_type,
-                                        db_hostname, db_port, db_name, is_tls)
-            DbClient._db_client_dict[key] = self
 
     def get_mongo_db_uri(self, db_username: str = None, db_password: str = None,
                          user_type: UserTypeEnum = UserTypeEnum.DB_USER,
@@ -161,7 +145,7 @@ class DbClient(DbClientBase):
         return self._mongo_db_client
 
     def is_db_exist(self, db_name: str) -> bool:
-        return db_name in self._mongo_db_client.list_database_names()
+        return db_name in self.get_db_name_list()
 
     def get_db(self, db_name: str) -> Database:
         if not self.is_db_exist(db_name):
@@ -169,13 +153,22 @@ class DbClient(DbClientBase):
 
         return self._mongo_db_client[db_name]
 
-    def create_db(self, db_name) -> Database:
+    def get_db_name_list(self) -> list:
+        return self._mongo_db_client.list_database_names()
+
+    def create_db(self, db_name: str, collection_name: str = None) -> Database:
         if db_name in self._mongo_db_client.list_database_names():
             raise DbException("Unable to create database [" + db_name
                               + "] because it is already exist")
 
         logger().info("Create database [" + db_name + "]")
-        return self._mongo_db_client[db_name]
+        db = self._mongo_db_client[db_name]
+
+        if collection_name:
+            logger().info("Create collection [" + db_name + "]")
+            db.create_collection(collection_name)
+
+        return db
 
     def delete_db(self, db_name: str):
         if self.is_db_exist(db_name):
@@ -191,8 +184,8 @@ class DbClient(DbClientBase):
                               + "] because database was not chosen")
 
         logger().info("Create user [" + username + "]")
-        self._mongo_db_client[self.db_name].command("createUser", username,
-                                                    pwd=password, roles=roles)
+        self.mongo_db_client[self.db_name].command("createUser", username,
+                                                   pwd=password, roles=roles)
 
     def delete_user(self, username: str):
         if not self.db_name:
@@ -201,7 +194,7 @@ class DbClient(DbClientBase):
 
         try:
             logger().info("Delete user [" + username + "] if it is exist")
-            self._mongo_db_client[self.db_name].command("dropUser", username)
+            self.mongo_db_client[self.db_name].command("dropUser", username)
         except OperationFailure:
             logger().debug("User [" + username + "] not exist")
 
@@ -217,6 +210,29 @@ class DbClient(DbClientBase):
 
         db = self.mongo_db_client[self.db_name]
         return db.command("usersInfo")["users"]
+
+    def _create_new_connection(self, db_username: str, db_password: str, user_type: UserTypeEnum,
+                               db_hostname: str, db_port: int, db_name: str, is_tls: bool):
+        uri = self.get_mongo_db_uri(db_username, db_password, user_type, db_hostname,
+                                    db_port, db_name, is_tls)
+        logger().debug("Connect to MongoDB using URI [" + uri + "]")
+        if DbClient.is_mock_db_enabled():
+            self._mongo_db_client = mongomock.MongoClient(uri)
+        else:
+            self._mongo_db_client = MongoClient(uri)
+        self.verify_connected_to_db()
+        self._db = self._mongo_db_client.get_database()
+
+    def _create_unique_connection(self, db_username: str, db_password: str, user_type: UserTypeEnum,
+                                  db_hostname: str, db_port: int, db_name: str, is_tls: bool):
+        key = self._get_db_client_key(db_username, user_type)
+
+        if key in DbClient._db_client_dict:
+            self.__dict__.update(DbClient._db_client_dict[key])
+        else:
+            self._create_new_connection(db_username, db_password, user_type,
+                                        db_hostname, db_port, db_name, is_tls)
+            DbClient._db_client_dict[key] = self
 
     @classmethod
     def _get_uri_tls(cls, is_tls: bool):
@@ -253,3 +269,12 @@ class DbClient(DbClientBase):
         key += str(user_type.value)
 
         return key
+
+    @staticmethod
+    def enable_mock_db():
+        logger().debug("Unit test DbClient using mongomock")
+        DbClient._is_mock_db = True
+
+    @staticmethod
+    def is_mock_db_enabled() -> bool:
+        return DbClient._is_mock_db
