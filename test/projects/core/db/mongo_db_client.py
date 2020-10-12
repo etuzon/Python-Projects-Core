@@ -1,6 +1,6 @@
 import unittest
 
-from projects.core.db.mongo_db_client import DbClient, UserTypeEnum
+from projects.core.db.mongodb.mongo_db_client import DbClient, UserTypeEnum
 from projects.core.io.logger import LogLevelEnum, LoggerFormatterEnum, init_logger
 
 
