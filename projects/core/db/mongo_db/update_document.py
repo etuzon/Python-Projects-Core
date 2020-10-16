@@ -11,7 +11,7 @@ class MongoDbUpdateDocumentBase:
     _update_dict: dict
 
     def _add_value(self, key: str, value):
-        if value:
+        if value is not None:
             if type(value) == enum.EnumMeta:
                 self._update_dict[key] = value.value
             else:
