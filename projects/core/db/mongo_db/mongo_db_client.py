@@ -1,6 +1,7 @@
 """
 @author: Eyal Tuzon
 """
+
 from enum import Enum
 
 import mongomock
@@ -58,17 +59,9 @@ class DbClientBase:
     def db_hostname(self):
         return self._db_hostname
 
-    @db_hostname.setter
-    def db_hostname(self, hostname: str):
-        self._db_hostname = hostname
-
     @property
     def db_port(self):
         return self._db_port
-
-    @db_port.setter
-    def db_port(self, port: int):
-        self._db_port = port
 
     @property
     def user_type(self) -> UserTypeEnum:
@@ -198,15 +191,15 @@ class DbClient(DbClientBase):
         except OperationFailure:
             logger().debug("User [" + username + "] not exist")
 
-    def show_collection_names(self) -> list:
+    def get_collection_names(self) -> list:
         if not self.db_name:
-            raise DbException("Unable to show collection names because database name was not provided")
+            raise DbException("Unable to get collection names because database name was not provided")
 
         return self.mongo_db_client[self.db_name].list_collection_names()
 
-    def show_users(self) -> dict:
+    def get_users(self) -> dict:
         if not self.db_name:
-            raise DbException("Unable to show users because database name was not provided")
+            raise DbException("Unable to get users because database name was not provided")
 
         db = self.mongo_db_client[self.db_name]
         return db.command("usersInfo")["users"]

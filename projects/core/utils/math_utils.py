@@ -1,5 +1,5 @@
 from projects.core.exceptions.core_exceptions import ApplicationException
-from projects.core.utils.numbers_util import NumbersUtil
+from projects.core.utils.numbers_utils import NumbersUtil
 
 
 class MathUtil:

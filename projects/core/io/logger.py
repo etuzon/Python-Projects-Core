@@ -58,7 +58,7 @@ class ApplicationLogger(object):
 
     _instance = None
     _is_closed = False
-
+    _is_init: bool
     _logger = None
 
     def __init__(self, console_log_level=LogLevelEnum.INFO, file_log_level=LogLevelEnum.DEBUG,
@@ -73,7 +73,7 @@ class ApplicationLogger(object):
             return
 
         ApplicationLogger._instance = self
-        self.is_init = False
+        self._is_init = False
         self.console_log_level = console_log_level
         self.file_log_level = file_log_level
         _create_empty_logger_file(file_path)
@@ -83,7 +83,7 @@ class ApplicationLogger(object):
         self._set_formatter(console_formatter, file_formatter)
         self._add_handlers_to_logging()
         self._init_logger_adapter()
-        self.is_init = True
+        self._is_init = True
 
     @classmethod
     def get_instance(cls):
@@ -120,8 +120,8 @@ class ApplicationLogger(object):
         self._log(ERROR, msg)
 
     @property
-    def is_logger_init(self):
-        return self.is_init
+    def is_logger_init(self) -> bool:
+        return self._is_init
 
     def close(self):
         self._is_closed = True
@@ -131,6 +131,7 @@ class ApplicationLogger(object):
             handler.close()
             self._logger.removeHandler(handler)
 
+    @property
     def is_logger_closed(self):
         return self._is_closed
 
@@ -142,7 +143,7 @@ class ApplicationLogger(object):
         self.logger_adapter.log(level, msg, self.extra)
 
     def _validate_logger_not_closed(self):
-        if self.is_logger_closed():
+        if self.is_logger_closed:
             raise ApplicationException("Logger is closed")
 
     def _create_logger(self, console_log_level):
@@ -200,8 +201,8 @@ class ApplicationLogger(object):
             return logging.Formatter(self.DETAILED_FORMATTER)
 
         raise ApplicationException("Unable to get log formatter. Formatter Type ["
-                                       + str(formatter_type)
-                                       + "] is not one of LoggerFormatterEnum values")
+                                   + str(formatter_type)
+                                   + "] is not one of LoggerFormatterEnum values")
 
     def _add_handlers_to_logging(self):
         self._logger.addHandler(self.console_handler)

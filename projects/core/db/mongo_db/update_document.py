@@ -1,6 +1,4 @@
 import enum
-import inspect
-from enum import Enum
 
 
 class MongoDbUpdateDocumentBase:
@@ -12,7 +10,7 @@ class MongoDbUpdateDocumentBase:
 
     def _add_value(self, key: str, value):
         if value is not None:
-            if type(value) == enum.EnumMeta:
+            if isinstance(value, enum.Enum):
                 self._update_dict[key] = value.value
             else:
                 self._update_dict[key] = value

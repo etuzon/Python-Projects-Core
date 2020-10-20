@@ -9,5 +9,5 @@ class ApplicationException(Exception):
         """
         Constructor
         """
+        super().__init__(msg)
         self.message = msg
-        super().__init__(self.message)
