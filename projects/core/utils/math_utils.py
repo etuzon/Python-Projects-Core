@@ -1,10 +1,12 @@
+from decimal import Decimal
+
 from projects.core.exceptions.core_exceptions import ApplicationException
 from projects.core.utils.numbers_utils import NumbersUtil
 
 
 class MathUtil:
     @staticmethod
-    def average(numbers: list, weights: list) -> float:
+    def average(numbers: list, weights: list) -> Decimal:
         MathUtil._verify_all_list_are_numbers(numbers)
         MathUtil._verify_all_list_are_numbers(weights)
 

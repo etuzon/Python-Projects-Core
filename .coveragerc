@@ -9,7 +9,7 @@ omit =
     venv/*
     tests/*
     */__init__.py
-    */tests_suite.py
+    */tests_execution.py
 
 [report]
 exclude_lines =

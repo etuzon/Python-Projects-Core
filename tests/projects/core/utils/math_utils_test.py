@@ -6,11 +6,6 @@ from projects.core.exceptions.core_exceptions import ApplicationException
 from projects.core.utils.math_utils import MathUtil
 
 
-#    ([1, 2, 3], [1, 1, 1], 2)
-# ])
-# ,
-# ([4, 9.5, 11.2], [1, 6.5, 2.5], 24.7375),
-# ([-5, 0, 6], [3, 6, 18], 3)
 class MathUtilTests(unittest.TestCase):
     @parameterized.expand([([1, 2, 3], [1, 1, 1], 2),
                            ([4, 9.5, 11.2], [1, 6.5, 2.5], 9.375),
