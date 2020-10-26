@@ -16,7 +16,8 @@ class TestsSuite:
         if self._is_coverage:
             self._coverage.start()
 
-        tests = unittest.TestLoader().discover(start_dir='.', pattern='*_test.py')
+        tests = unittest.TestLoader().discover(start_dir='.',
+                                               pattern='*_test.py')
         unittest.TextTestRunner(verbosity=2).run(tests)
 
         if self._is_coverage:

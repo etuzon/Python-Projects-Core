@@ -1,8 +1,8 @@
 from setuptools import setup
 
 setup(
-    name='projects.core',
-    version='1.1.0',
+    name='projects_core',
+    version='1.1.1',
     packages=['tests', 'tests.projects', 'tests.projects.core', 'tests.projects.core.db', 'tests.projects.core.io',
               'tests.projects.core.utils', 'tests.projects.core.objects', 'tests.projects.core.exceptions',
               'tests.projects.core.etuzon_http', 'projects', 'projects.core', 'projects.core.db',
@@ -11,6 +11,6 @@ setup(
     url='',
     license='',
     author='etuzon',
-    author_email='eyal.tuzon.finance@gmail.com',
+    author_email='eyal.tuzon.dev@gmail.com',
     description=''
 )

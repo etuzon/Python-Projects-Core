@@ -1,6 +1,7 @@
 import unittest
 
-from projects.core.exceptions.db_exceptions import DbConnectionException, DbException
+from projects.core.exceptions.db_exceptions import \
+    DbConnectionException, DbException
 from projects.core.test.unittest_base import UnitTestBase
 
 

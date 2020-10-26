@@ -1,7 +1,8 @@
 import unittest
 
 from projects.core.db.mongo_db.mongo_db_client import UserTypeEnum, DbClient
-from projects.core.io.logger import LogLevelEnum, LoggerFormatterEnum, init_logger
+from projects.core.io.logger import \
+    LogLevelEnum, LoggerFormatterEnum, init_logger
 
 
 class DbClientTests(unittest.TestCase):
@@ -27,7 +28,8 @@ class DbClientTests(unittest.TestCase):
     COLLECTION_NAME = "test_collection"
 
     def setUp(self) -> None:
-        init_logger(LogLevelEnum.DEBUG, LogLevelEnum.DEBUG, LoggerFormatterEnum.DETAILED)
+        init_logger(LogLevelEnum.DEBUG, LogLevelEnum.DEBUG,
+                    LoggerFormatterEnum.DETAILED)
         DbClient.enable_mock_db()
 
     def test_1_create_db_and_collection(self):
@@ -40,15 +42,17 @@ class DbClientTests(unittest.TestCase):
                         "DB [" + self.DB_NAME + "] was not created")
         db = db_client.get_db(self.DB_NAME)
         self.assertTrue(self.COLLECTION_NAME in db.list_collection_names(),
-                        "Collection [" + self.COLLECTION_NAME + "] was not created")
+                        "Collection [" + self.COLLECTION_NAME
+                        + "] was not created")
 
     def test_2_admin_db_name_is_admin(self):
         db_client = self._mock_mongo_db_with_admin_user()
         self.assertTrue(db_client.db, "DB is None")
-        self.assertTrue(db_client.db.name == db_client.db_name, "DB name [" + db_client.db.name
+        self.assertTrue(db_client.db.name == db_client.db_name, "DB name ["
+                        + db_client.db.name
                         + "] not equal to db_name [" + db_client.db_name + "]")
-        self.assertTrue(db_client.db.name == "admin", "DB name [" + db_client.db.name
-                        + "] is not admin")
+        self.assertTrue(db_client.db.name == "admin", "DB name ["
+                        + db_client.db.name + "] is not admin")
 
     def test_3_mock_with_minimum_parameters_and_get_hostname_and_port(self):
         db_client = self._mock_mongo_db_with_minimum_parameters()
@@ -62,15 +66,17 @@ class DbClientTests(unittest.TestCase):
         hostname = "test123"
         port = 1234
         expected_hostname = hostname + ":" + str(port)
-        self.assertTrue(DbClient.get_mongo_db_hostname(hostname, port) == expected_hostname)
+        self.assertTrue(DbClient.get_mongo_db_hostname(
+            hostname, port) == expected_hostname)
 
     def test_5_test_create_db_and_collection_and_delete_db(self):
         db_client = self._mock_mongo_db_with_db_user()
         db_client.create_db(self.DB_NAME, self.COLLECTION_NAME)
         self.assertTrue(db_client.is_db_exist(self.DB_NAME),
                         "DB [" + self.DB_NAME + "] was not created")
-        self.assertTrue(self.COLLECTION_NAME in db_client.get_collection_names(),
-                        "Collection [" + self.COLLECTION_NAME + "] was not created")
+        self.assertTrue(
+            self.COLLECTION_NAME in db_client.get_collection_names(),
+            "Collection [" + self.COLLECTION_NAME + "] was not created")
         db_client.delete_db(self.DB_NAME)
         self.assertTrue(not db_client.is_db_exist(db_client.db.name))
 

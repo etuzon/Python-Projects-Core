@@ -51,7 +51,9 @@ class ApplicationLogger(object):
     """
 
     BASIC_FORMATTER = '%(asctime)s [%(levelname)s] %(message)s'
-    DETAILED_FORMATTER = '%(asctime)s - [%(filename2)s:%(functionname)s:%(linenumber)s] [%(levelname)s] %(message)s'
+    DETAILED_FORMATTER = '%(asctime)s - ' \
+                         '[%(filename2)s:%(functionname)s:%(linenumber)s] ' \
+                         '[%(levelname)s] %(message)s'
 
     LOGS_MAIN_DIRECTORY = "./logs/"
     OLD_DIRECTORY = LOGS_MAIN_DIRECTORY + "old/"
@@ -61,15 +63,18 @@ class ApplicationLogger(object):
     _is_init: bool
     _logger = None
 
-    def __init__(self, console_log_level=LogLevelEnum.INFO, file_log_level=LogLevelEnum.DEBUG,
-                 console_formatter: LoggerFormatterEnum = None, file_path=None,
+    def __init__(self, console_log_level=LogLevelEnum.INFO,
+                 file_log_level=LogLevelEnum.DEBUG,
+                 console_formatter: LoggerFormatterEnum = None,
+                 file_path=None,
                  file_formatter: LoggerFormatterEnum = None):
         """
         Constructor
         """
         if ApplicationLogger._instance:
-            ApplicationLogger._instance.info("Constructor should not run more than one time."
-                                             + " Please use get_instance()")
+            ApplicationLogger._instance.info("Constructor should not run "
+                                             "more than one time. "
+                                             "Please use get_instance()")
             return
 
         ApplicationLogger._instance = self
@@ -89,8 +94,10 @@ class ApplicationLogger(object):
     def get_instance(cls):
         if ApplicationLogger._instance is None:
             raise ApplicationException("Bug: " + cls.__name__
-                                       + " was not initiated so cannot get active instance.\n"
-                                       + "Constructor should be run one time before calling to get_instance()")
+                                       + " was not initiated so "
+                                         "cannot get active instance.\n"
+                                         "Constructor should be run one time "
+                                         "before calling to get_instance()")
         return ApplicationLogger._instance
 
     @staticmethod
@@ -168,7 +175,8 @@ class ApplicationLogger(object):
         if console_formatter is None:
             console_formatter = LoggerFormatterEnum.BASIC
 
-        self.console_handler.setFormatter(self._get_formatter(console_formatter))
+        self.console_handler.setFormatter(
+            self._get_formatter(console_formatter))
 
         if self.file_handler:
             if file_formatter is None:
@@ -192,7 +200,11 @@ class ApplicationLogger(object):
         line_number = str(s[row_index][2])
         function_name = s[row_index][3]
 
-        self.extra = {"filename2": file_name, "linenumber": line_number, "functionname": function_name}
+        self.extra = {
+            "filename2": file_name,
+            "linenumber": line_number,
+            "functionname": function_name
+        }
 
     def _get_formatter(self, formatter_type):
         if formatter_type == LoggerFormatterEnum.BASIC:
@@ -200,9 +212,11 @@ class ApplicationLogger(object):
         elif formatter_type == LoggerFormatterEnum.DETAILED:
             return logging.Formatter(self.DETAILED_FORMATTER)
 
-        raise ApplicationException("Unable to get log formatter. Formatter Type ["
+        raise ApplicationException("Unable to get log formatter. "
+                                   "Formatter Type ["
                                    + str(formatter_type)
-                                   + "] is not one of LoggerFormatterEnum values")
+                                   + "] is not one of "
+                                     "LoggerFormatterEnum values")
 
     def _add_handlers_to_logging(self):
         self._logger.addHandler(self.console_handler)
@@ -214,8 +228,10 @@ def logger() -> ApplicationLogger:
     return ApplicationLogger.get_instance()
 
 
-def init_logger(console_log_level=LogLevelEnum.INFO, file_log_level=LogLevelEnum.DEBUG,
+def init_logger(console_log_level=LogLevelEnum.INFO,
+                file_log_level=LogLevelEnum.DEBUG,
                 console_formatter: LoggerFormatterEnum = None, file_path=None,
                 file_formatter: LoggerFormatterEnum = None):
     if not ApplicationLogger.is_instance():
-        ApplicationLogger(console_log_level, file_log_level, console_formatter, file_path, file_formatter)
+        ApplicationLogger(console_log_level, file_log_level,
+                          console_formatter, file_path, file_formatter)

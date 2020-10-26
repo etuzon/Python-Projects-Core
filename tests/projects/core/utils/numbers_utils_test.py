@@ -19,7 +19,8 @@ class NumbersUtilTests(unittest.TestCase):
                            ([-5, 6, False],)])
     def test_all_numbers_negative(self, numbers):
         self.assertFalse(NumbersUtil.is_all_numbers(numbers),
-                         "Test was not found that there is none numeric variable in ["
+                         "Test was not found that there is "
+                         "none numeric variable in ["
                          + str(numbers) + "]")
 
 

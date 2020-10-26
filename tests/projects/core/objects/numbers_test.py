@@ -1,7 +1,8 @@
 import unittest
 
 from parameterized import parameterized
-from projects.core.objects.numbers import DecimalNumber, set_decimal_number_prec
+from projects.core.objects.numbers import \
+    DecimalNumber, set_decimal_number_prec
 
 
 class DecimalNumberTests(unittest.TestCase):
@@ -9,60 +10,75 @@ class DecimalNumberTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         set_decimal_number_prec(6)
 
-    @parameterized.expand([(DecimalNumber(1), DecimalNumber(3), DecimalNumber(4)),
-                           (DecimalNumber(-1), DecimalNumber(3), DecimalNumber(2)),
-                           (DecimalNumber(5.5), DecimalNumber(7.1), DecimalNumber(12.6)),
-                           (DecimalNumber(0), DecimalNumber(3.2), DecimalNumber(3.2)),
-                           (DecimalNumber(1.1), 3, DecimalNumber(4.1)),
-                           (DecimalNumber(1.2), 3.2, DecimalNumber(4.4))])
+    @parameterized.expand(
+        [(DecimalNumber(1), DecimalNumber(3), DecimalNumber(4)),
+         (DecimalNumber(-1), DecimalNumber(3), DecimalNumber(2)),
+         (DecimalNumber(5.5), DecimalNumber(7.1), DecimalNumber(12.6)),
+         (DecimalNumber(0), DecimalNumber(3.2), DecimalNumber(3.2)),
+         (DecimalNumber(1.1), 3, DecimalNumber(4.1)),
+         (DecimalNumber(1.2), 3.2, DecimalNumber(4.4))])
     def test_add(self, num1, num2, expected_result):
         result = num1 + num2
-        self.assertTrue(result == expected_result, "Result is [" + str(result)
-                        + "], but it should be [" + str(expected_result) + "]")
+        self.assertTrue(result == expected_result,
+                        "Result is [" + str(result)
+                        + "], but it should be ["
+                        + str(expected_result) + "]")
 
-    @parameterized.expand([(DecimalNumber(1), DecimalNumber(3), DecimalNumber(-2)),
-                           (DecimalNumber(-1), DecimalNumber(3), DecimalNumber(-4)),
-                           (DecimalNumber(5.5), DecimalNumber(7.1), DecimalNumber(-1.6)),
-                           (DecimalNumber(0), DecimalNumber(3.2), DecimalNumber(-3.2)),
-                           (DecimalNumber(1.1), 3, DecimalNumber(-1.9)),
-                           (DecimalNumber(1.2), 3.2, DecimalNumber(-2))])
+    @parameterized.expand(
+        [(DecimalNumber(1), DecimalNumber(3), DecimalNumber(-2)),
+         (DecimalNumber(-1), DecimalNumber(3), DecimalNumber(-4)),
+         (DecimalNumber(5.5), DecimalNumber(7.1), DecimalNumber(-1.6)),
+         (DecimalNumber(0), DecimalNumber(3.2), DecimalNumber(-3.2)),
+         (DecimalNumber(1.1), 3, DecimalNumber(-1.9)),
+         (DecimalNumber(1.2), 3.2, DecimalNumber(-2))])
     def test_sub(self, num1, num2, expected_result):
         result = num1 - num2
-        self.assertTrue(result == expected_result, "Result is [" + str(result)
-                        + "], but it should be [" + str(expected_result) + "]")
+        self.assertTrue(result == expected_result,
+                        "Result is [" + str(result)
+                        + "], but it should be ["
+                        + str(expected_result) + "]")
 
-    @parameterized.expand([(DecimalNumber(1), DecimalNumber(3), DecimalNumber(3)),
-                           (DecimalNumber(-1), DecimalNumber(-3), DecimalNumber(3)),
-                           (DecimalNumber(5.5), DecimalNumber(7.1), DecimalNumber(39.05)),
-                           (DecimalNumber(0), DecimalNumber(3.2), DecimalNumber(0)),
-                           (DecimalNumber(1.1), 3, DecimalNumber(3.3)),
-                           (DecimalNumber(1.2), 3.2, DecimalNumber(3.84))])
+    @parameterized.expand(
+        [(DecimalNumber(1), DecimalNumber(3), DecimalNumber(3)),
+         (DecimalNumber(-1), DecimalNumber(-3), DecimalNumber(3)),
+         (DecimalNumber(5.5), DecimalNumber(7.1), DecimalNumber(39.05)),
+         (DecimalNumber(0), DecimalNumber(3.2), DecimalNumber(0)),
+         (DecimalNumber(1.1), 3, DecimalNumber(3.3)),
+         (DecimalNumber(1.2), 3.2, DecimalNumber(3.84))])
     def test_multiple(self, num1, num2, expected_result):
         result = num1 * num2
-        self.assertTrue(result == expected_result, "Result is [" + str(result)
-                        + "], but it should be [" + str(expected_result) + "]")
+        self.assertTrue(result == expected_result,
+                        "Result is [" + str(result)
+                        + "], but it should be ["
+                        + str(expected_result) + "]")
 
-    @parameterized.expand([(DecimalNumber(1), DecimalNumber(1), DecimalNumber(1)),
-                           (DecimalNumber(-1), DecimalNumber(-4), DecimalNumber(0.25)),
-                           (DecimalNumber(10), DecimalNumber(4), DecimalNumber(2.5)),
-                           (DecimalNumber(0), DecimalNumber(3.2), DecimalNumber(0)),
-                           (DecimalNumber(9), 3, DecimalNumber(3)),
-                           (DecimalNumber(-9), 6, DecimalNumber(-1.5))])
+    @parameterized.expand(
+        [(DecimalNumber(1), DecimalNumber(1), DecimalNumber(1)),
+         (DecimalNumber(-1), DecimalNumber(-4), DecimalNumber(0.25)),
+         (DecimalNumber(10), DecimalNumber(4), DecimalNumber(2.5)),
+         (DecimalNumber(0), DecimalNumber(3.2), DecimalNumber(0)),
+         (DecimalNumber(9), 3, DecimalNumber(3)),
+         (DecimalNumber(-9), 6, DecimalNumber(-1.5))])
     def test_div(self, num1, num2, expected_result):
         result = num1 / num2
-        self.assertTrue(result == expected_result, "Result is [" + str(result)
-                        + "], but it should be [" + str(expected_result) + "]")
+        self.assertTrue(result == expected_result,
+                        "Result is [" + str(result)
+                        + "], but it should be ["
+                        + str(expected_result) + "]")
 
-    @parameterized.expand([(DecimalNumber(1), DecimalNumber(1), DecimalNumber(1)),
-                           (DecimalNumber(-2), DecimalNumber(2), DecimalNumber(4)),
-                           (DecimalNumber(10), DecimalNumber(3), DecimalNumber(1000)),
-                           (DecimalNumber(0), DecimalNumber(3.2), DecimalNumber(0)),
-                           (DecimalNumber(9), 2.5, DecimalNumber(243)),
-                           (DecimalNumber(-9), 6, DecimalNumber(531441))])
+    @parameterized.expand(
+        [(DecimalNumber(1), DecimalNumber(1), DecimalNumber(1)),
+         (DecimalNumber(-2), DecimalNumber(2), DecimalNumber(4)),
+         (DecimalNumber(10), DecimalNumber(3), DecimalNumber(1000)),
+         (DecimalNumber(0), DecimalNumber(3.2), DecimalNumber(0)),
+         (DecimalNumber(9), 2.5, DecimalNumber(243)),
+         (DecimalNumber(-9), 6, DecimalNumber(531441))])
     def test_pow(self, num1, num2, expected_result):
         result = num1 ** num2
-        self.assertTrue(result == expected_result, "Result is [" + str(result)
-                        + "], but it should be [" + str(expected_result) + "]")
+        self.assertTrue(result == expected_result,
+                        "Result is [" + str(result)
+                        + "], but it should be ["
+                        + str(expected_result) + "]")
 
     @parameterized.expand([(DecimalNumber(1), DecimalNumber(1)),
                            (DecimalNumber(2), DecimalNumber(2)),
@@ -185,9 +201,16 @@ class DecimalNumberTests(unittest.TestCase):
         num1 = DecimalNumber(9.123456789, 8)
         self.assertTrue(num1, 9.12345678)
         self.assertTrue(num1.get_prec() == 8)
+        self.assertTrue(
+            DecimalNumber.get_prec() == DecimalNumber.DEFAULT_PREC,
+            "DecimalNumber.prec value is ["
+            + str(DecimalNumber.get_prec()) + "] but should be ["
+            + str(DecimalNumber.DEFAULT_PREC) + "]")
         DecimalNumber.set_prec(2)
         num2 = DecimalNumber(4.1234)
         self.assertTrue(num2 == 4.12)
+        DecimalNumber.set_prec(10)
+        self.assertTrue(DecimalNumber.get_prec() == 10)
         DecimalNumber.set_prec(DecimalNumber.DEFAULT_PREC)
 
 

@@ -74,16 +74,17 @@ class DecimalNumber:
         else:
             self.__dict__[key] = value
 
-    def _get_prec(self) -> int:
-        return self._local_prec
-
     @staticmethod
     def set_prec(prec: int):
         DecimalNumber._prec = prec
 
-    @staticmethod
-    def get_prec() -> int:
+    def get_prec(self=None):
+        if self:
+            return self._local_prec
         return DecimalNumber._prec
+
+    def _get_prec(self) -> int:
+        return self._local_prec
 
 
 def set_decimal_number_prec(prec: int):

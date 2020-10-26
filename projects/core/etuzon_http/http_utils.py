@@ -8,8 +8,10 @@ from projects.core.exceptions.http_exceptions import HttpResponseNotJson
 
 class HttpUtil:
     @staticmethod
-    def send_get_request_receive_json_response(url, headers=None, basic_auth: HTTPBasicAuth = None) -> dict:
-        response = requests.request("GET", url, headers=headers, auth=basic_auth)
+    def send_get_request_receive_json_response(
+            url, headers=None, basic_auth: HTTPBasicAuth = None) -> dict:
+        response = requests.request("GET", url, headers=headers,
+                                    auth=basic_auth)
         return HttpUtil.convert_http_json_response_to_dict(response)
 
     @staticmethod

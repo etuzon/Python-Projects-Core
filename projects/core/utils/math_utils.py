@@ -11,8 +11,10 @@ class MathUtil:
         MathUtil._verify_all_list_are_numbers(weights)
 
         if len(numbers) != len(weights):
-            raise ApplicationException("Numbers list len [" + str(len(numbers))
-                                       + "] is different from weights list len ["
+            raise ApplicationException("Numbers list len ["
+                                       + str(len(numbers))
+                                       + "] is different from "
+                                         "weights list len ["
                                        + str(len(weights)) + "]")
         numbers_weighted = 0
 

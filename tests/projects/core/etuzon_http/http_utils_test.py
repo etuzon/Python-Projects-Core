@@ -6,7 +6,8 @@ from projects.core.exceptions.http_exceptions import HttpResponseNotJson
 
 
 class HttpUtilTests(unittest.TestCase):
-    RESPONSE_TEXT = "{\"key1\":39.30,\"key2\":\"value2\",\"key3\":null,\"key4\":true}"
+    RESPONSE_TEXT = "{\"key1\":39.30,\"key2\":\"value2\"," \
+                    "\"key3\":null,\"key4\":true}"
 
     def test_1_convert_http_response_to_dict(self):
         response = Response()
@@ -39,7 +40,8 @@ class HttpUtilTests(unittest.TestCase):
         url = "http://test.com"
         with requests_mock.Mocker() as m:
             m.get(url, text=self.RESPONSE_TEXT)
-            response_dict = HttpUtil.send_get_request_receive_json_response(url)
+            response_dict = \
+                HttpUtil.send_get_request_receive_json_response(url)
             self._verify_response_dict(response_dict)
 
     def _verify_response_dict(self, response_dict: dict):
