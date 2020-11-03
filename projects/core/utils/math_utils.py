@@ -1,12 +1,11 @@
-from decimal import Decimal
-
 from projects.core.exceptions.core_exceptions import ApplicationException
+from projects.core.objects.numbers import DecimalNumber
 from projects.core.utils.numbers_utils import NumbersUtil
 
 
 class MathUtil:
     @staticmethod
-    def average(numbers: list, weights: list) -> Decimal:
+    def average(numbers: list, weights: list) -> DecimalNumber:
         MathUtil._verify_all_list_are_numbers(numbers)
         MathUtil._verify_all_list_are_numbers(weights)
 
@@ -16,12 +15,12 @@ class MathUtil:
                                        + "] is different from "
                                          "weights list len ["
                                        + str(len(weights)) + "]")
-        numbers_weighted = 0
+        numbers_weighted = DecimalNumber(0)
 
         for i in range(len(numbers)):
             numbers_weighted += numbers[i] * weights[i]
 
-        return numbers_weighted / sum(weights)
+        return numbers_weighted / DecimalNumber(sum(weights))
 
     @staticmethod
     def _verify_all_list_are_numbers(numbers: list):

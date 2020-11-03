@@ -213,6 +213,25 @@ class DecimalNumberTests(unittest.TestCase):
         self.assertTrue(DecimalNumber.get_prec() == 10)
         DecimalNumber.set_prec(DecimalNumber.DEFAULT_PREC)
 
+    @parameterized.expand([(DecimalNumber(11.1111), 2, DecimalNumber(11.11)),
+                           (DecimalNumber(22.33331111), None, 22)])
+    def test_round(self, num, digits, expected_result):
+        result = round(num, digits)
+        self.assertTrue(
+            result == expected_result,
+            "Result of round [" + str(num) + "] with [" + str(digits)
+            + "] digits is [" + str(result) + "], but should be ["
+            + str(expected_result) + "]")
+
+    @parameterized.expand([(DecimalNumber(11.1111), DecimalNumber(-11.1111)),
+                           (DecimalNumber(0), DecimalNumber(0)),
+                           (DecimalNumber(-5), DecimalNumber(5)),
+                           (DecimalNumber(44), DecimalNumber(-44)),
+                           (DecimalNumber(-5.22), DecimalNumber(5.22)),
+                           (DecimalNumber(44), -44)])
+    def test_negative(self, num, expected_result):
+        self.assertTrue(-num == expected_result)
+
 
 if __name__ == '__main__':
     unittest.main()

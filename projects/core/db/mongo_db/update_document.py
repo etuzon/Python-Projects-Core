@@ -1,5 +1,7 @@
 import enum
 
+from projects.core.objects.numbers import DecimalNumber
+
 
 class MongoDbUpdateDocumentBase:
     """
@@ -12,6 +14,8 @@ class MongoDbUpdateDocumentBase:
         if value is not None:
             if isinstance(value, enum.Enum):
                 self._update_dict[key] = value.value
+            elif isinstance(value, DecimalNumber):
+                self._update_dict[key] = float(value)
             else:
                 self._update_dict[key] = value
 

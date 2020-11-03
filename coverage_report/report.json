@@ -1,7 +1,7 @@
 {
     "meta": {
         "version": "5.3",
-        "timestamp": "2020-10-26T11:32:18.934992",
+        "timestamp": "2020-11-03T18:18:19.102861",
         "branch_coverage": true,
         "show_contexts": false
     },
@@ -205,29 +205,33 @@
         "projects\\core\\db\\mongo_db\\update_document.py": {
             "executed_lines": [
                 1,
-                4,
-                5,
-                9,
+                3,
+                6,
+                7,
                 11,
-                12,
                 13,
                 14,
+                15,
                 16,
-                18,
-                19
+                17,
+                20,
+                22,
+                23
             ],
             "summary": {
-                "covered_lines": 10,
-                "num_statements": 10,
-                "percent_covered": 100.0,
-                "missing_lines": 0,
+                "covered_lines": 12,
+                "num_statements": 13,
+                "percent_covered": 89.47368421052632,
+                "missing_lines": 1,
                 "excluded_lines": 0,
-                "num_branches": 4,
-                "num_partial_branches": 0,
-                "covered_branches": 4,
-                "missing_branches": 0
+                "num_branches": 6,
+                "num_partial_branches": 1,
+                "covered_branches": 5,
+                "missing_branches": 1
             },
-            "missing_lines": [],
+            "missing_lines": [
+                18
+            ],
             "excluded_lines": []
         },
         "projects\\core\\etuzon_http\\http_utils.py": {
@@ -550,32 +554,36 @@
                 56,
                 57,
                 59,
+                60,
                 62,
-                63,
-                64,
+                65,
                 66,
-                68,
+                67,
                 69,
                 71,
                 72,
-                73,
+                74,
                 75,
                 77,
                 78,
                 79,
                 81,
-                82,
                 83,
                 84,
-                86,
+                85,
                 87,
+                88,
+                89,
                 90,
-                91
+                92,
+                93,
+                96,
+                97
             ],
             "summary": {
-                "covered_lines": 59,
-                "num_statements": 60,
-                "percent_covered": 98.52941176470588,
+                "covered_lines": 63,
+                "num_statements": 64,
+                "percent_covered": 98.61111111111111,
                 "missing_lines": 1,
                 "excluded_lines": 0,
                 "num_branches": 8,
@@ -584,7 +592,7 @@
                 "missing_branches": 0
             },
             "missing_lines": [
-                60
+                63
             ],
             "excluded_lines": []
         },
@@ -653,23 +661,23 @@
         "projects\\core\\utils\\math_utils.py": {
             "executed_lines": [
                 1,
+                2,
                 3,
-                4,
+                6,
                 7,
                 8,
                 9,
                 10,
-                11,
+                12,
                 13,
-                14,
-                19,
+                18,
+                20,
                 21,
-                22,
-                24,
+                23,
+                25,
                 26,
                 27,
-                28,
-                29
+                28
             ],
             "summary": {
                 "covered_lines": 18,
@@ -688,17 +696,18 @@
         "projects\\core\\utils\\numbers_utils.py": {
             "executed_lines": [
                 1,
-                4,
+                3,
                 6,
-                7,
                 8,
                 9,
                 10,
-                12
+                11,
+                14,
+                16
             ],
             "summary": {
-                "covered_lines": 8,
-                "num_statements": 8,
+                "covered_lines": 9,
+                "num_statements": 9,
                 "percent_covered": 100.0,
                 "missing_lines": 0,
                 "excluded_lines": 0,
@@ -734,14 +743,14 @@
         }
     },
     "totals": {
-        "covered_lines": 417,
-        "num_statements": 494,
-        "percent_covered": 80.62913907284768,
-        "missing_lines": 77,
+        "covered_lines": 424,
+        "num_statements": 502,
+        "percent_covered": 80.61889250814332,
+        "missing_lines": 78,
         "excluded_lines": 0,
-        "num_branches": 110,
-        "num_partial_branches": 22,
-        "covered_branches": 70,
-        "missing_branches": 40
+        "num_branches": 112,
+        "num_partial_branches": 23,
+        "covered_branches": 71,
+        "missing_branches": 41
     }
 }

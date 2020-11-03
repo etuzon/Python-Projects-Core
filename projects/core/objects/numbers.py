@@ -35,6 +35,9 @@ class DecimalNumber:
     def __pow__(self, power, modulo=None):
         return DecimalNumber(self.number ** float(power))
 
+    def __neg__(self):
+        return DecimalNumber(-self.number)
+
     def __eq__(self, other) -> bool:
         return self.number == float(other)
 
@@ -64,6 +67,9 @@ class DecimalNumber:
             return DecimalNumber(-self.number)
 
         return DecimalNumber(self.number)
+
+    def __round__(self, n=None):
+        return DecimalNumber(round(self._number, n))
 
     def __str__(self):
         return str(self.number)
