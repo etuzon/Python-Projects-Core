@@ -1,7 +1,7 @@
 import unittest
 
 from projects.core.exceptions.core_exceptions import ApplicationException
-from projects.core.io.logger import \
+from projects.core.etuzon_io.logger import \
     ApplicationLogger, LogLevelEnum, LoggerFormatterEnum
 
 
@@ -10,7 +10,7 @@ class LoggerApplicationTests(unittest.TestCase):
         ApplicationLogger.destroy()
 
     def test_logger_print_without_exceptions(self):
-        msg = "123"
+        msg = '123'
         logger = ApplicationLogger(
             console_log_level=LogLevelEnum.DEBUG,
             file_log_level=LogLevelEnum.DEBUG,

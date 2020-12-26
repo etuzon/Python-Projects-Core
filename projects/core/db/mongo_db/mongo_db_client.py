@@ -11,7 +11,7 @@ from pymongo.errors import ServerSelectionTimeoutError, OperationFailure
 from projects.core.exceptions.core_exceptions import ApplicationException
 from projects.core.exceptions.db_exceptions import \
     DbConnectionException, DbException
-from projects.core.io.logger import logger
+from projects.core.etuzon_io.logger import logger
 
 
 class UserTypeEnum(Enum):
@@ -22,7 +22,7 @@ class UserTypeEnum(Enum):
 class DbClientBase:
     MAX_COLLECTION_NAME = 64
 
-    LOCAL_HOST = "127.0.0.1"
+    LOCAL_HOST = '127.0.0.1'
     DEFAULT_PORT = 27017
 
     _mongo_db_client: MongoClient = None
@@ -33,9 +33,12 @@ class DbClientBase:
     _user_type: UserTypeEnum
     _db_name: str
 
-    def __init__(self, db_hostname: str = None, db_port: int = None,
-                 user_type: UserTypeEnum = UserTypeEnum.DB_USER,
-                 db_name: str = None):
+    def __init__(
+            self,
+            db_hostname: str = None,
+            db_port: int = None,
+            user_type: UserTypeEnum = UserTypeEnum.DB_USER,
+            db_name: str = None):
         if db_hostname:
             self._db_hostname = db_hostname
         else:
@@ -81,18 +84,18 @@ class DbClientBase:
         try:
             self._mongo_db_client.get_default_database()
         except ServerSelectionTimeoutError:
-            raise DbConnectionException("Unable connect to DB with hostname ["
-                                        + self.db_hostname + ":"
-                                        + str(self.db_port)
-                                        + "] due to a timeout")
+            raise DbConnectionException(
+                'Unable connect to DB with hostname ['
+                f'{self.db_hostname}:{self.db_port}] due to a timeout')
         except OperationFailure as e:
-            raise DbConnectionException("Unable connect to DB with hostname ["
-                                        + self.db_hostname + ":"
-                                        + str(self.db_port) + "].\n" + str(e))
+            raise DbConnectionException(
+                'Unable connect to DB with hostname ['
+                f'{self.db_hostname}:{self.db_port}].\n'
+                f'{e}')
 
     @staticmethod
     def get_mongo_db_hostname(hostname: str, port: int) -> str:
-        return hostname + ":" + str(port)
+        return f'{hostname}:{port}'
 
 
 class DbClient(DbClientBase):
@@ -103,35 +106,56 @@ class DbClient(DbClientBase):
 
     _is_mock_db: bool = False
 
-    def __init__(self, db_username: str, db_password: str,
-                 user_type: UserTypeEnum, db_hostname: str = None,
-                 db_port: int = None, db_name: str = None,
-                 is_tls: bool = False, is_unique: bool = True):
+    def __init__(
+            self,
+            db_username: str,
+            db_password: str,
+            user_type: UserTypeEnum,
+            db_hostname: str = None,
+            db_port: int = None,
+            db_name: str = None,
+            is_tls: bool = False,
+            is_unique: bool = True):
         super().__init__(db_hostname, db_port, user_type, db_name)
 
         if is_unique:
-            self._create_unique_connection(db_username, db_password, user_type,
-                                           db_hostname, db_port, db_name,
-                                           is_tls)
+            self._create_unique_connection(
+                db_username,
+                db_password,
+                user_type,
+                db_hostname,
+                db_port,
+                db_name,
+                is_tls)
         else:
-            self._create_new_connection(db_username, db_password, user_type,
-                                        db_hostname, db_port, db_name, is_tls)
+            self._create_new_connection(
+                db_username,
+                db_password,
+                user_type,
+                db_hostname,
+                db_port,
+                db_name,
+                is_tls)
 
-    def get_mongo_db_uri(self, db_username: str = None,
-                         db_password: str = None,
-                         user_type: UserTypeEnum = UserTypeEnum.DB_USER,
-                         db_hostname: str = None, db_port: int = None,
-                         db_name: str = None, is_tls: bool = False):
+    def get_mongo_db_uri(
+            self,
+            db_username: str = None,
+            db_password: str = None,
+            user_type: UserTypeEnum = UserTypeEnum.DB_USER,
+            db_hostname: str = None,
+            db_port: int = None,
+            db_name: str = None,
+            is_tls: bool = False):
         uri = self._get_uri_tls(is_tls)
         uri += self._get_uri_username_and_password(db_username, db_password)
         uri += self._get_uri_hostname_and_port(db_hostname, db_port)
 
         if user_type == UserTypeEnum.MONGO_DB_USER:
-            uri += "/admin"
+            uri += '/admin'
         elif db_name:
-            uri += "/" + db_name
+            uri += '/' + db_name
         elif db_username:
-            uri += "/defaultauthdb"
+            uri += '/defaultauthdb'
 
         return uri
 
@@ -148,7 +172,7 @@ class DbClient(DbClientBase):
 
     def get_db(self, db_name: str) -> Database:
         if not self.is_db_exist(db_name):
-            raise DbException("Database [" + db_name + "] was not found")
+            raise DbException(f'Database [{db_name}] was not found')
 
         return self._mongo_db_client[db_name]
 
@@ -157,68 +181,79 @@ class DbClient(DbClientBase):
 
     def create_db(self, db_name: str, collection_name: str = None) -> Database:
         if db_name in self._mongo_db_client.list_database_names():
-            raise DbException("Unable to create database [" + db_name
-                              + "] because it is already exist")
+            raise DbException(f'Unable to create database [{db_name}]'
+                              ' because it is already exist')
 
-        logger().info("Create database [" + db_name + "]")
+        logger().info(f'Create database [{db_name}]')
         db = self._mongo_db_client[db_name]
 
         if collection_name:
-            logger().info("Create collection [" + db_name + "]")
+            logger().info(f'Create collection [{db_name}]')
             db.create_collection(collection_name)
 
         return db
 
     def delete_db(self, db_name: str):
         if self.is_db_exist(db_name):
-            logger().info("Delete database [" + db_name + "]")
+            logger().info(f'Delete database [{db_name}]')
             self._mongo_db_client.drop_database(db_name)
         else:
-            raise DbException("Unable to delete database [" + db_name
-                              + "] because it is not exist")
+            raise DbException(f'Unable to delete database [{db_name}]'
+                              ' because it is not exist')
 
     def create_user(self, username: str, password: str, roles: list):
         if not self.db_name:
-            raise DbException("Unable to create user [" + username
-                              + "] because database was not chosen")
+            raise DbException(f'Unable to create user [{username}]'
+                              ' because database was not chosen')
 
-        logger().info("Create user [" + username + "]")
-        self.mongo_db_client[self.db_name].command("createUser", username,
+        logger().info(f'Create user [{username}]')
+        self.mongo_db_client[self.db_name].command('createUser', username,
                                                    pwd=password, roles=roles)
 
     def delete_user(self, username: str):
         if not self.db_name:
-            raise DbException("Unable to delete user [" + username
-                              + "] because database was not chosen")
+            raise DbException(f'Unable to delete user [{username}]'
+                              ' because database was not chosen')
 
         try:
-            logger().info("Delete user [" + username + "] if it is exist")
-            self.mongo_db_client[self.db_name].command("dropUser", username)
+            logger().info(f'Delete user [{username}] if it is exist')
+            self.mongo_db_client[self.db_name].command('dropUser', username)
         except OperationFailure:
-            logger().debug("User [" + username + "] not exist")
+            logger().debug(f'User [{username}] not exist')
 
     def get_collection_names(self) -> list:
         if not self.db_name:
-            raise DbException("Unable to get collection names "
-                              "because database name was not provided")
+            raise DbException('Unable to get collection names'
+                              ' because database name was not provided')
 
         return self.mongo_db_client[self.db_name].list_collection_names()
 
     def get_users(self) -> dict:
         if not self.db_name:
-            raise DbException("Unable to get users "
-                              "because database name was not provided")
+            raise DbException('Unable to get users'
+                              ' because database name was not provided')
 
         db = self.mongo_db_client[self.db_name]
-        return db.command("usersInfo")["users"]
+        return db.command('usersInfo')['users']
 
-    def _create_new_connection(self, db_username: str, db_password: str,
-                               user_type: UserTypeEnum,
-                               db_hostname: str, db_port: int,
-                               db_name: str, is_tls: bool):
-        uri = self.get_mongo_db_uri(db_username, db_password, user_type,
-                                    db_hostname, db_port, db_name, is_tls)
-        logger().debug("Connect to MongoDB using URI [" + uri + "]")
+    def _create_new_connection(
+            self,
+            db_username: str,
+            db_password: str,
+            user_type: UserTypeEnum,
+            db_hostname: str,
+            db_port: int,
+            db_name: str,
+            is_tls: bool):
+        uri = self.get_mongo_db_uri(
+            db_username,
+            db_password,
+            user_type,
+            db_hostname,
+            db_port,
+            db_name,
+            is_tls)
+        logger().debug(f'Connect to MongoDB using URI [{uri}]')
         if DbClient.is_mock_db_enabled():
             self._mongo_db_client = mongomock.MongoClient(uri)
         else:
@@ -226,38 +261,51 @@ class DbClient(DbClientBase):
         self.verify_connected_to_db()
         self._db = self._mongo_db_client.get_database()
 
-    def _create_unique_connection(self, db_username: str, db_password: str,
-                                  user_type: UserTypeEnum, db_hostname: str,
-                                  db_port: int, db_name: str, is_tls: bool):
+    def _create_unique_connection(
+            self,
+            db_username: str,
+            db_password: str,
+            user_type: UserTypeEnum,
+            db_hostname: str,
+            db_port: int,
+            db_name: str,
+            is_tls: bool):
         key = self._get_db_client_key(db_username, user_type)
 
         if key in DbClient._db_client_dict:
             self.__dict__.update(DbClient._db_client_dict[key])
         else:
-            self._create_new_connection(db_username, db_password, user_type,
-                                        db_hostname, db_port, db_name, is_tls)
+            self._create_new_connection(
+                db_username,
+                db_password,
+                user_type,
+                db_hostname,
+                db_port,
+                db_name,
+                is_tls)
             DbClient._db_client_dict[key] = self
 
     @classmethod
     def _get_uri_tls(cls, is_tls: bool):
         if is_tls:
-            return "mongodb+srv://"
-        return "mongodb://"
+            return 'mongodb+srv://'
+        return 'mongodb://'
 
     @classmethod
-    def _get_uri_username_and_password(cls, db_username: str,
-                                       db_password: str):
+    def _get_uri_username_and_password(
+            cls,
+            db_username: str,
+            db_password: str):
         if (db_username and not db_password) \
                 or (db_password and not db_username):
-            raise ApplicationException("Both Username [" + db_username
-                                       + "] and Password [" + db_password
-                                       + "] must be with values, "
-                                       + "or both of them must be None")
+            raise ApplicationException(
+                f'Both Username [{db_username}] and Password [{db_password}]'
+                ' must be with values, or both of them must be None')
 
         if db_username and db_password:
-            return db_username + ":" + db_password + "@"
+            return db_username + ':' + db_password + '@'
 
-        return ""
+        return ''
 
     def _get_uri_hostname_and_port(self, hostname: str, port: int):
         if not hostname:
@@ -266,12 +314,12 @@ class DbClient(DbClientBase):
         if not port:
             port = self.DEFAULT_PORT
 
-        return hostname + ":" + str(port)
+        return f'{hostname}:{port}'
 
     def _get_db_client_key(self, db_username: str, user_type: UserTypeEnum):
-        key = self.db_hostname + "_" + str(self.db_port)
+        key = f'{self.db_hostname}_{self.db_port}'
         if db_username:
-            key += "_" + db_username + "_"
+            key += f'_{db_username}_'
 
         key += str(user_type.value)
 
@@ -279,7 +327,7 @@ class DbClient(DbClientBase):
 
     @staticmethod
     def enable_mock_db():
-        logger().debug("Unit test DbClient using mongomock")
+        logger().debug('Unit test DbClient using mongomock')
         DbClient._is_mock_db = True
 
     @staticmethod

@@ -1,7 +1,8 @@
 import unittest
 from enum import Enum
 
-from projects.core.db.mongo_db.update_document import MongoDbUpdateDocumentBase
+from projects.core.db.mongo_db.update_document import \
+    MongoDbUpdateDocumentBase
 
 
 class MongoDbUpdateDocumentBaseTests(unittest.TestCase):
@@ -25,15 +26,15 @@ class MongoDbUpdateDocumentBaseTests(unittest.TestCase):
         self.assertFalse(update_doc.get_dict())
 
     def test_2_add_key(self):
-        key = "key1"
-        value = "value1"
+        key = 'key1'
+        value = 'value1'
 
         update_doc = MongoDbUpdateDocumentBaseTests.TestClass()
         update_doc.add_value(key, value)
         self.assertTrue(update_doc.get_dict()[key] == value)
 
     def test_3_add_key_with_enum_value(self):
-        key = "key1"
+        key = 'key1'
         value = MongoDbUpdateDocumentBaseTests.TestEnum.TWO
 
         update_doc = MongoDbUpdateDocumentBaseTests.TestClass()
@@ -41,7 +42,7 @@ class MongoDbUpdateDocumentBaseTests(unittest.TestCase):
         self.assertTrue(update_doc.get_dict()[key] == value.value)
 
     def test_4_add_key_with_none_value(self):
-        key = "key1"
+        key = 'key1'
         value = None
 
         update_doc = MongoDbUpdateDocumentBaseTests.TestClass()

@@ -75,7 +75,7 @@ class DecimalNumber:
         return str(self.number)
 
     def __setattr__(self, key, value):
-        if key == "_number":
+        if key == '_number':
             self.__dict__[key] = round(float(value), self._get_prec())
         else:
             self.__dict__[key] = value

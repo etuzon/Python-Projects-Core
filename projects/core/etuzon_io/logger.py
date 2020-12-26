@@ -13,8 +13,8 @@ from projects.core.exceptions.core_exceptions import ApplicationException
 
 
 class LoggerFormatterEnum(Enum):
-    BASIC = "Basic"
-    DETAILED = "Detailed"
+    BASIC = 'Basic'
+    DETAILED = 'Detailed'
 
 
 class LogLevelEnum(Enum):
@@ -55,26 +55,28 @@ class ApplicationLogger(object):
                          '[%(filename2)s:%(functionname)s:%(linenumber)s] ' \
                          '[%(levelname)s] %(message)s'
 
-    LOGS_MAIN_DIRECTORY = "./logs/"
-    OLD_DIRECTORY = LOGS_MAIN_DIRECTORY + "old/"
+    LOGS_MAIN_DIRECTORY = './logs/'
+    OLD_DIRECTORY = LOGS_MAIN_DIRECTORY + 'old/'
 
     _instance = None
     _is_closed = False
     _is_init: bool
     _logger = None
 
-    def __init__(self, console_log_level=LogLevelEnum.INFO,
-                 file_log_level=LogLevelEnum.DEBUG,
-                 console_formatter: LoggerFormatterEnum = None,
-                 file_path=None,
-                 file_formatter: LoggerFormatterEnum = None):
+    def __init__(
+            self,
+            console_log_level=LogLevelEnum.INFO,
+            file_log_level=LogLevelEnum.DEBUG,
+            console_formatter: LoggerFormatterEnum = None,
+            file_path=None,
+            file_formatter: LoggerFormatterEnum = None):
         """
         Constructor
         """
         if ApplicationLogger._instance:
-            ApplicationLogger._instance.info("Constructor should not run "
-                                             "more than one time. "
-                                             "Please use get_instance()")
+            ApplicationLogger._instance.info(
+                'Constructor should not run more than one time.'
+                ' Please use get_instance()')
             return
 
         ApplicationLogger._instance = self
@@ -93,11 +95,11 @@ class ApplicationLogger(object):
     @classmethod
     def get_instance(cls):
         if ApplicationLogger._instance is None:
-            raise ApplicationException("Bug: " + cls.__name__
-                                       + " was not initiated so "
-                                         "cannot get active instance.\n"
-                                         "Constructor should be run one time "
-                                         "before calling to get_instance()")
+            raise ApplicationException(
+                f'Bug: {cls.__name__} was not initiated'
+                ' so cannot get active instance.\n'
+                'Constructor should be run one time'
+                ' before calling to get_instance()')
         return ApplicationLogger._instance
 
     @staticmethod
@@ -151,10 +153,10 @@ class ApplicationLogger(object):
 
     def _validate_logger_not_closed(self):
         if self.is_logger_closed:
-            raise ApplicationException("Logger is closed")
+            raise ApplicationException('Logger is closed')
 
     def _create_logger(self, console_log_level):
-        self._logger = logging.getLogger("Logger")
+        self._logger = logging.getLogger('Logger')
         self._logger.setLevel(console_log_level.value)
 
     def _set_console_handler(self, console_log_level):
@@ -193,7 +195,7 @@ class ApplicationLogger(object):
         row_index = 3
         file_name = ntpath.basename(s[row_index][1])
 
-        if file_name == "logger.py":
+        if file_name == 'logger.py':
             row_index = 4
             file_name = ntpath.basename(s[row_index][1])
 
@@ -201,9 +203,9 @@ class ApplicationLogger(object):
         function_name = s[row_index][3]
 
         self.extra = {
-            "filename2": file_name,
-            "linenumber": line_number,
-            "functionname": function_name
+            'filename2': file_name,
+            'linenumber': line_number,
+            'functionname': function_name
         }
 
     def _get_formatter(self, formatter_type):
@@ -212,11 +214,9 @@ class ApplicationLogger(object):
         elif formatter_type == LoggerFormatterEnum.DETAILED:
             return logging.Formatter(self.DETAILED_FORMATTER)
 
-        raise ApplicationException("Unable to get log formatter. "
-                                   "Formatter Type ["
-                                   + str(formatter_type)
-                                   + "] is not one of "
-                                     "LoggerFormatterEnum values")
+        raise ApplicationException(
+            f'Unable to get log formatter. Formatter Type [{formatter_type}]'
+            ' is not one of LoggerFormatterEnum values')
 
     def _add_handlers_to_logging(self):
         self._logger.addHandler(self.console_handler)
