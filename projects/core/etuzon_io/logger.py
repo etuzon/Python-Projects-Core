@@ -12,11 +12,6 @@ import os
 from projects.core.exceptions.core_exceptions import ApplicationException
 
 
-class LoggerFormatterEnum(Enum):
-    BASIC = 'Basic'
-    DETAILED = 'Detailed'
-
-
 class LogLevelEnum(Enum):
     """
     Colors of each log level
@@ -50,10 +45,7 @@ class ApplicationLogger(object):
     Application logger
     """
 
-    BASIC_FORMATTER = '%(asctime)s [%(levelname)s] %(message)s'
-    DETAILED_FORMATTER = '%(asctime)s - ' \
-                         '[%(filename2)s:%(functionname)s:%(linenumber)s] ' \
-                         '[%(levelname)s] %(message)s'
+    FORMATTER = '%(asctime)s [%(levelname)s] %(message)s'
 
     LOGS_MAIN_DIRECTORY = './logs/'
     OLD_DIRECTORY = LOGS_MAIN_DIRECTORY + 'old/'
@@ -67,9 +59,7 @@ class ApplicationLogger(object):
             self,
             console_log_level=LogLevelEnum.INFO,
             file_log_level=LogLevelEnum.DEBUG,
-            console_formatter: LoggerFormatterEnum = None,
-            file_path=None,
-            file_formatter: LoggerFormatterEnum = None):
+            file_path=None):
         """
         Constructor
         """
@@ -87,7 +77,6 @@ class ApplicationLogger(object):
         self._create_logger(console_log_level)
         self._set_console_handler(console_log_level)
         self._set_logging_file_handler(file_path, file_log_level)
-        self._set_formatter(console_formatter, file_formatter)
         self._add_handlers_to_logging()
         self._init_logger_adapter()
         self._is_init = True
@@ -149,7 +138,9 @@ class ApplicationLogger(object):
 
     def _log(self, level, msg):
         self._validate_logger_not_closed()
-        self.logger_adapter.log(level, msg, self.extra)
+        prefix = self._get_log_prefix()
+        msg = f'{prefix} {msg}'
+        self.logger_adapter.log(level, msg)
 
     def _validate_logger_not_closed(self):
         if self.is_logger_closed:
@@ -162,6 +153,7 @@ class ApplicationLogger(object):
     def _set_console_handler(self, console_log_level):
         ch = logging.StreamHandler()
         ch.setLevel(console_log_level.value)
+        ch.setFormatter(self._get_formatter())
         self.console_handler = ch
 
     def _set_logging_file_handler(self, file_path, file_log_level):
@@ -169,59 +161,36 @@ class ApplicationLogger(object):
             _create_log_directory_if_not_exists(file_path)
             fh = logging.FileHandler(file_path, mode='w', encoding='utf-8')
             fh.setLevel(file_log_level.value)
+            fh.setFormatter(self._get_formatter())
             self.file_handler = fh
         else:
             self.file_handler = None
 
-    def _set_formatter(self, console_formatter, file_formatter):
-        if console_formatter is None:
-            console_formatter = LoggerFormatterEnum.BASIC
-
-        self.console_handler.setFormatter(
-            self._get_formatter(console_formatter))
-
-        if self.file_handler:
-            if file_formatter is None:
-                file_formatter = LoggerFormatterEnum.DETAILED
-
-            self.file_handler.setFormatter(self._get_formatter(file_formatter))
-
     def _init_logger_adapter(self):
-        self._set_extra()
-        self.logger_adapter = logging.LoggerAdapter(self._logger, self.extra)
+        self.logger_adapter = logging.LoggerAdapter(self._logger, {})
 
-    def _set_extra(self):
-        s = stack()
-        row_index = 3
-        file_name = ntpath.basename(s[row_index][1])
-
-        if file_name == 'logger.py':
-            row_index = 4
-            file_name = ntpath.basename(s[row_index][1])
-
-        line_number = str(s[row_index][2])
-        function_name = s[row_index][3]
-
-        self.extra = {
-            'filename2': file_name,
-            'linenumber': line_number,
-            'functionname': function_name
-        }
-
-    def _get_formatter(self, formatter_type):
-        if formatter_type == LoggerFormatterEnum.BASIC:
-            return logging.Formatter(self.BASIC_FORMATTER)
-        elif formatter_type == LoggerFormatterEnum.DETAILED:
-            return logging.Formatter(self.DETAILED_FORMATTER)
-
-        raise ApplicationException(
-            f'Unable to get log formatter. Formatter Type [{formatter_type}]'
-            ' is not one of LoggerFormatterEnum values')
+    def _get_formatter(self):
+        return logging.Formatter(self.FORMATTER)
 
     def _add_handlers_to_logging(self):
         self._logger.addHandler(self.console_handler)
         if self.file_handler:
             self._logger.addHandler(self.file_handler)
+
+    @classmethod
+    def _get_log_prefix(cls) -> str:
+        s = stack()
+        row_index = 3
+        function_name = s[row_index][3]
+
+        if function_name == '_debug':
+            row_index = 4
+            function_name = s[row_index][3]
+
+        file_name = ntpath.basename(s[row_index][1])
+        line_number = str(s[row_index][2])
+
+        return f'[{file_name} {function_name}:{line_number}] '
 
 
 def logger() -> ApplicationLogger:
@@ -229,9 +198,6 @@ def logger() -> ApplicationLogger:
 
 
 def init_logger(console_log_level=LogLevelEnum.INFO,
-                file_log_level=LogLevelEnum.DEBUG,
-                console_formatter: LoggerFormatterEnum = None, file_path=None,
-                file_formatter: LoggerFormatterEnum = None):
+                file_log_level=LogLevelEnum.DEBUG, file_path=None):
     if not ApplicationLogger.is_instance():
-        ApplicationLogger(console_log_level, file_log_level,
-                          console_formatter, file_path, file_formatter)
+        ApplicationLogger(console_log_level, file_log_level, file_path)

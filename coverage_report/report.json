@@ -1,7 +1,7 @@
 {
     "meta": {
         "version": "5.3.1",
-        "timestamp": "2020-12-26T09:57:21.181980",
+        "timestamp": "2020-12-27T17:26:25.622094",
         "branch_coverage": true,
         "show_contexts": false
     },
@@ -240,42 +240,49 @@
                 3,
                 4,
                 5,
-                6,
-                9,
-                10,
+                7,
+                8,
                 11,
-                13,
+                12,
+                14,
                 15,
                 17,
-                18,
                 19,
+                21,
                 22,
-                29,
-                30,
-                32,
+                23,
+                26,
                 33,
+                34,
                 35,
-                36,
                 37,
-                39,
+                38,
                 40,
                 41,
-                43
+                42,
+                44,
+                45,
+                46,
+                48,
+                50,
+                51,
+                52
             ],
             "summary": {
-                "covered_lines": 25,
-                "num_statements": 27,
-                "percent_covered": 87.87878787878788,
-                "missing_lines": 2,
+                "covered_lines": 31,
+                "num_statements": 34,
+                "percent_covered": 85.71428571428571,
+                "missing_lines": 3,
                 "excluded_lines": 0,
-                "num_branches": 6,
-                "num_partial_branches": 2,
-                "covered_branches": 4,
-                "missing_branches": 2
+                "num_branches": 8,
+                "num_partial_branches": 3,
+                "covered_branches": 5,
+                "missing_branches": 3
             },
             "missing_lines": [
-                20,
-                42
+                24,
+                47,
+                53
             ],
             "excluded_lines": []
         },
@@ -743,14 +750,14 @@
         }
     },
     "totals": {
-        "covered_lines": 424,
-        "num_statements": 502,
-        "percent_covered": 80.61889250814332,
-        "missing_lines": 78,
+        "covered_lines": 430,
+        "num_statements": 509,
+        "percent_covered": 80.57784911717496,
+        "missing_lines": 79,
         "excluded_lines": 0,
-        "num_branches": 112,
-        "num_partial_branches": 23,
-        "covered_branches": 71,
-        "missing_branches": 41
+        "num_branches": 114,
+        "num_partial_branches": 24,
+        "covered_branches": 72,
+        "missing_branches": 42
     }
 }
