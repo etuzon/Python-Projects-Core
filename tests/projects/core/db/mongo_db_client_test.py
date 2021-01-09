@@ -2,10 +2,11 @@ import unittest
 
 from projects.core.db.mongo_db.mongo_db_client import UserTypeEnum, DbClient
 from projects.core.etuzon_io.logger import \
-    LogLevelEnum, LoggerFormatterEnum, init_logger
+    LogLevelEnum, init_logger
+from projects.core.test.unittest_base import UnitTestBase
 
 
-class DbClientTests(unittest.TestCase):
+class DbClientTests(UnitTestBase):
     """
     The test contains connection to real DB,
     so it will not be run as part of the regression tests
@@ -30,8 +31,7 @@ class DbClientTests(unittest.TestCase):
     def setUp(self) -> None:
         init_logger(
             LogLevelEnum.DEBUG,
-            LogLevelEnum.DEBUG,
-            LoggerFormatterEnum.DETAILED)
+            LogLevelEnum.DEBUG)
         DbClient.enable_mock_db()
 
     def test_1_create_db_and_collection(self):

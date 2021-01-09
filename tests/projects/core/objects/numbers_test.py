@@ -3,9 +3,10 @@ import unittest
 from parameterized import parameterized
 from projects.core.objects.numbers import \
     DecimalNumber, set_decimal_number_prec
+from projects.core.test.unittest_base import UnitTestBase
 
 
-class DecimalNumberTests(unittest.TestCase):
+class DecimalNumberTests(UnitTestBase):
     @classmethod
     def setUpClass(cls) -> None:
         set_decimal_number_prec(6)

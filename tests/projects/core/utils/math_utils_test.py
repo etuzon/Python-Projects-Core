@@ -3,10 +3,11 @@ import unittest
 from parameterized import parameterized
 
 from projects.core.exceptions.core_exceptions import ApplicationException
+from projects.core.test.unittest_base import UnitTestBase
 from projects.core.utils.math_utils import MathUtil
 
 
-class MathUtilTests(unittest.TestCase):
+class MathUtilTests(UnitTestBase):
     @parameterized.expand(
         [([1, 2, 3], [1, 1, 1], 2),
          ([4, 9.5, 11.2], [1, 6.5, 2.5], 9.375),

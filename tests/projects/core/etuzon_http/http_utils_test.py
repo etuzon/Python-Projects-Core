@@ -3,9 +3,10 @@ from requests import Response
 import requests_mock
 from projects.core.etuzon_http.http_utils import HttpUtil
 from projects.core.exceptions.http_exceptions import HttpResponseNotJson
+from projects.core.test.unittest_base import UnitTestBase
 
 
-class HttpUtilTests(unittest.TestCase):
+class HttpUtilTests(UnitTestBase):
     RESPONSE_TEXT = '{\"key1\":39.30,\"key2\":\"value2\",' \
                     '\"key3\":null,\"key4\":true}'
 

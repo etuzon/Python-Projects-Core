@@ -1,10 +1,11 @@
 import time
 import unittest
 
+from projects.core.test.unittest_base import UnitTestBase
 from projects.core.utils.time_utils import TimeUtil
 
 
-class TimeUtilTests(unittest.TestCase):
+class TimeUtilTests(UnitTestBase):
     def test_get_current_time_ms(self):
         prev = TimeUtil.get_current_time_ms()
         current = int(round(time.time() * 1000))

@@ -25,13 +25,13 @@ class LogLevelEnum(Enum):
     EXCEPTION = logging.CRITICAL
 
 
-def _create_log_directory_if_not_exists(file_path):
+def _create_log_directory_if_not_exists(file_path: str):
     directory = os.path.dirname(file_path)
     if not os.path.exists(directory):
         os.makedirs(directory)
 
 
-def _create_empty_logger_file(file_path):
+def _create_empty_logger_file(file_path: str):
     if file_path:
         file = os.path.join(file_path)
         directory = os.path.dirname(file)
@@ -51,15 +51,15 @@ class ApplicationLogger(object):
     OLD_DIRECTORY = LOGS_MAIN_DIRECTORY + 'old/'
 
     _instance = None
-    _is_closed = False
+    _is_closed: bool
     _is_init: bool
     _logger = None
 
     def __init__(
             self,
-            console_log_level=LogLevelEnum.INFO,
-            file_log_level=LogLevelEnum.DEBUG,
-            file_path=None):
+            console_log_level: LogLevelEnum = LogLevelEnum.INFO,
+            file_log_level: LogLevelEnum = LogLevelEnum.DEBUG,
+            file_path: str = None):
         """
         Constructor
         """
@@ -79,6 +79,7 @@ class ApplicationLogger(object):
         self._set_logging_file_handler(file_path, file_log_level)
         self._add_handlers_to_logging()
         self._init_logger_adapter()
+        self._is_closed = False
         self._is_init = True
 
     @classmethod
@@ -197,7 +198,9 @@ def logger() -> ApplicationLogger:
     return ApplicationLogger.get_instance()
 
 
-def init_logger(console_log_level=LogLevelEnum.INFO,
-                file_log_level=LogLevelEnum.DEBUG, file_path=None):
+def init_logger(
+        console_log_level: LogLevelEnum = LogLevelEnum.INFO,
+        file_log_level: LogLevelEnum = LogLevelEnum.DEBUG,
+        file_path: str = None):
     if not ApplicationLogger.is_instance():
         ApplicationLogger(console_log_level, file_log_level, file_path)

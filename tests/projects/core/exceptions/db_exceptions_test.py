@@ -5,7 +5,7 @@ from projects.core.exceptions.db_exceptions import \
 from projects.core.test.unittest_base import UnitTestBase
 
 
-class DbExceptionsTest(UnitTestBase):
+class DbExceptionsTests(UnitTestBase):
     def test_db_connection_exception(self):
         msg = 'test 123'
         self._verify_exception(DbConnectionException, msg)

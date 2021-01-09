@@ -2,10 +2,11 @@ import unittest
 
 from parameterized import parameterized
 
+from projects.core.test.unittest_base import UnitTestBase
 from projects.core.utils.numbers_utils import NumbersUtil
 
 
-class NumbersUtilTests(unittest.TestCase):
+class NumbersUtilTests(UnitTestBase):
 
     @parameterized.expand(
         [([1, 2, 3], ),

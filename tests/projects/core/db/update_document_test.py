@@ -3,9 +3,10 @@ from enum import Enum
 
 from projects.core.db.mongo_db.update_document import \
     MongoDbUpdateDocumentBase
+from projects.core.test.unittest_base import UnitTestBase
 
 
-class MongoDbUpdateDocumentBaseTests(unittest.TestCase):
+class MongoDbUpdateDocumentBaseTests(UnitTestBase):
     class TestEnum(Enum):
         ONE = 1
         TWO = 2
