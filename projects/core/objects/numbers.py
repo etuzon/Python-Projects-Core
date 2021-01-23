@@ -39,22 +39,22 @@ class DecimalNumber:
         return DecimalNumber(-self.number)
 
     def __eq__(self, other) -> bool:
-        return self.number == float(other)
+        return self.number == float(DecimalNumber(other))
 
     def __ne__(self, other) -> bool:
-        return self.number != float(other)
+        return self.number != float(DecimalNumber(other))
 
     def __gt__(self, other) -> bool:
-        return self.number > float(other)
+        return self.number > float(DecimalNumber(other))
 
     def __ge__(self, other):
-        return self.number >= float(other)
+        return self.number >= float(DecimalNumber(other))
 
     def __lt__(self, other):
-        return self.number < float(other)
+        return self.number < float(DecimalNumber(other))
 
     def __le__(self, other):
-        return self.number <= float(other)
+        return self.number <= float(DecimalNumber(other))
 
     def __float__(self):
         return self.number
