@@ -83,13 +83,13 @@ class ApplicationLogger(object):
         self._is_init = True
 
     @classmethod
-    def get_instance(cls):
+    def instance(cls):
         if ApplicationLogger._instance is None:
             raise ApplicationException(
                 f'Bug: {cls.__name__} was not initiated'
                 ' so cannot get active instance.\n'
                 'Constructor should be run one time'
-                ' before calling to get_instance()')
+                ' before calling to instance()')
         return ApplicationLogger._instance
 
     @staticmethod
@@ -195,7 +195,7 @@ class ApplicationLogger(object):
 
 
 def logger() -> ApplicationLogger:
-    return ApplicationLogger.get_instance()
+    return ApplicationLogger.instance()
 
 
 def init_logger(

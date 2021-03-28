@@ -27,10 +27,10 @@ class LoggerApplicationTests(UnitTestBase):
         logger = ApplicationLogger(
             console_log_level=LogLevelEnum.DEBUG,
             file_log_level=LogLevelEnum.DEBUG)
-        logger.get_instance()
+        logger.instance()
         logger.destroy()
         with self.assertRaises(ApplicationException):
-            logger.get_instance()
+            logger.instance()
 
     def test_logger_close(self):
         logger = ApplicationLogger(
