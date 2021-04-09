@@ -13,9 +13,23 @@ class HttpUtil:
 
     @classmethod
     def send_get_request_receive_json_response(
-            cls, url, headers=None, basic_auth: HTTPBasicAuth = None) -> dict:
+            cls,
+            url: str,
+            headers=None,
+            basic_auth: HTTPBasicAuth = None) -> dict:
         response = requests.request(
             'GET', url, headers=headers, auth=basic_auth)
+        return HttpUtil.convert_http_json_response_to_dict(response)
+
+    @classmethod
+    def send_post_request_receive_json_response(
+            cls,
+            url: str,
+            payload: dict,
+            headers=None,
+            basic_auth: HTTPBasicAuth = None) -> dict:
+        response = requests.request(
+            'POST', url, data=payload, headers=headers, auth=basic_auth)
         return HttpUtil.convert_http_json_response_to_dict(response)
 
     @classmethod
@@ -42,7 +56,7 @@ class HttpUtil:
             HttpUtil._raise_http_response_not_json_exception(response_str)
 
     @classmethod
-    def _raise_http_response_not_json_exception(cls, response_str):
+    def _raise_http_response_not_json_exception(cls, response_str: str):
         if response_str is None:
             response_str = ''
         raise HttpResponseNotJson(response_str)

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import time
 
 
@@ -10,3 +12,7 @@ class TimeUtil:
     @staticmethod
     def get_current_time_ms() -> int:
         return int(round(time.time() * 1000))
+
+    @staticmethod
+    def date_to_ms(date: datetime) -> int:
+        return int(date.timestamp()) * 1000

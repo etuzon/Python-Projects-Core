@@ -3,7 +3,7 @@
 class DecimalNumber:
     DEFAULT_PREC = 6
 
-    _prec: int = 6
+    _prec: int = DEFAULT_PREC
 
     _number: float = None
     _local_prec: int = None

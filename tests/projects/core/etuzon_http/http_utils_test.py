@@ -45,6 +45,15 @@ class HttpUtilTests(UnitTestBase):
                 HttpUtil.send_get_request_receive_json_response(url)
             self._verify_response_dict(response_dict)
 
+    def test_6_send_http_post_and_receive_response_to_dict(self):
+        url = 'http://test.com'
+        with requests_mock.Mocker() as m:
+            m.post(url, text=self.RESPONSE_TEXT)
+            response_dict = \
+                HttpUtil.send_post_request_receive_json_response(
+                    url, {'test': 'test1'})
+            self._verify_response_dict(response_dict)
+
     def _verify_response_dict(self, response_dict: dict):
         self.assertTrue(isinstance(response_dict, dict))
         self.assertEqual(response_dict['key1'], 39.30)
