@@ -224,14 +224,14 @@ class DbClient(DbClientBase):
     def get_collection_names(self) -> list:
         if not self.db_name:
             raise DbException('Unable to get collection names'
-                              ' because database name was not provided')
+                              ' because database table_name was not provided')
 
         return self.mongo_db_client[self.db_name].list_collection_names()
 
     def get_users(self) -> dict:
         if not self.db_name:
             raise DbException('Unable to get users'
-                              ' because database name was not provided')
+                              ' because database table_name was not provided')
 
         db = self.mongo_db_client[self.db_name]
         return db.command('usersInfo')['users']
