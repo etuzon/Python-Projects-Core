@@ -26,14 +26,14 @@ class PrettyTableManagerTests(unittest.TestCase):
         Test create table
         """
 
-        key = PrettyTableManager().create_table(self.TABLE_NAME, self.HEADERS1)
+        key = PrettyTableManager().create_table(self.HEADERS1, self.TABLE_NAME)
         self.assertTrue(key)
         self.assertTrue(
             key.find(expected_name) != -1,
             f'Table name [{key}] not contains [{expected_name}]')
         self.assertTrue(PrettyTableManager().is_table_exist(self.TABLE_NAME))
 
-        PrettyTableManager().add_row(self.TABLE_NAME, self.ROW1)
+        PrettyTableManager().add_row(self.ROW1, self.TABLE_NAME)
         table = PrettyTableManager().get_table_string(self.TABLE_NAME)
         self.assertTrue(table)
         self.assertTrue(table.find(self.HEADERS1[0]) >= 0)
@@ -46,7 +46,7 @@ class PrettyTableManagerTests(unittest.TestCase):
         """
 
         key = PrettyTableManager().create_table(
-            self.TABLE_NAME, self.HEADERS2, force_create=False)
+            self.HEADERS2, self.TABLE_NAME, force_create=False)
         self.assertTrue(key)
         self.assertTrue(
             key.find(expected_name) != -1,
@@ -75,23 +75,33 @@ class PrettyTableManagerTests(unittest.TestCase):
 
         """
         Test recreate table with force_create=True
+        and after that get_table_string with clear_rows=True
         """
 
         key = PrettyTableManager().create_table(
-            self.TABLE_NAME, self.HEADERS2, force_create=True)
+            self.HEADERS2, self.TABLE_NAME, force_create=True)
         self.assertTrue(key)
         self.assertTrue(
             key.find(expected_name) != -1,
             f'Table name [{key}] not contains [{expected_name}]')
         self.assertTrue(PrettyTableManager().is_table_exist(self.TABLE_NAME))
 
-        PrettyTableManager().add_row(self.TABLE_NAME, self.ROW2)
-        table = PrettyTableManager().get_table_string(self.TABLE_NAME)
+        PrettyTableManager().add_row(self.ROW2, self.TABLE_NAME)
+        table = PrettyTableManager().get_table_string(
+            self.TABLE_NAME, clear_rows=True)
         self.assertTrue(table)
         self.assertTrue(table.find(self.HEADERS2[0]) >= 0)
         self.assertTrue(table.find(self.HEADERS2[1]) >= 0)
         self.assertTrue(table.find(self.ROW2[0]) >= 0)
         self.assertTrue(table.find(self.ROW2[1]) >= 0)
+
+        table = PrettyTableManager().get_table_string(
+            self.TABLE_NAME)
+        self.assertTrue(table)
+        self.assertTrue(table.find(self.HEADERS2[0]) >= 0)
+        self.assertTrue(table.find(self.HEADERS2[1]) >= 0)
+        self.assertTrue(table.find(self.ROW2[0]) == -1)
+        self.assertTrue(table.find(self.ROW2[1]) == -1)
 
     def test_is_table_exist_negative(self):
         self.assertFalse(
@@ -99,7 +109,7 @@ class PrettyTableManagerTests(unittest.TestCase):
 
     def test_add_row_to_table_that_not_exist_negative(self):
         with self.assertRaises(Exception):
-            PrettyTableManager().add_row(self.TABLE_NAME_NOT_EXIST, self.ROW1)
+            PrettyTableManager().add_row(self.ROW1, self.TABLE_NAME_NOT_EXIST)
 
     def test_clear_table_row_for_table_that_not_exist_negative(self):
         with self.assertRaises(Exception):

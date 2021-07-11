@@ -20,10 +20,11 @@ class PrettyTableManager:
 
     def create_table(
             self,
-            table_name: str,
             headers: list,
-            force_create: bool = True) -> str:
-        key, table = self._get_key_and_table(table_name)
+            table_name: str = '',
+            force_create: bool = True,
+            sub_method_level: int = 0) -> str:
+        key, table = self._get_key_and_table(table_name, sub_method_level)
 
         if force_create or not table:
             self._pretty_table_dict[key] = \
@@ -31,11 +32,13 @@ class PrettyTableManager:
 
         return key
 
-    def is_table_exist(self, table_name: str) -> bool:
-        return bool(self._get_key_and_table(table_name)[1])
+    def is_table_exist(
+            self, table_name: str = '', sub_method_level: int = 0) -> bool:
+        return bool(self._get_key_and_table(table_name, sub_method_level)[1])
 
-    def add_row(self, table_name: str, row: list):
-        key, table = self._get_key_and_table(table_name)
+    def add_row(
+            self, row: list, table_name: str = '', sub_method_level: int = 0):
+        key, table = self._get_key_and_table(table_name, sub_method_level)
 
         if not table:
             raise Exception(
@@ -43,8 +46,9 @@ class PrettyTableManager:
 
         table.add_row(row)
 
-    def clear_table_rows(self, table_name: str):
-        key, table = self._get_key_and_table(table_name)
+    def clear_table_rows(
+            self, table_name: str = '', sub_method_level: int = 0):
+        key, table = self._get_key_and_table(table_name, sub_method_level)
 
         if not table:
             raise Exception(
@@ -52,23 +56,35 @@ class PrettyTableManager:
 
         table.clear_rows()
 
-    def get_table_string(self, table_name) -> str:
-        key, table = self._get_key_and_table(table_name)
+    def get_table_string(
+            self,
+            table_name: str = '',
+            clear_rows: bool = False,
+            sub_method_level: int = 0) -> str:
+        key, table = self._get_key_and_table(table_name, sub_method_level)
 
         if not table:
             raise Exception(
                 f'Bug: PrettyTable [{key}] not exist')
 
-        return table.get_string()
+        table_str = table.get_string()
 
-    def _get_key_and_table(self, table_name: str) -> tuple[str, PrettyTable]:
-        key = self._get_table_key(table_name)
+        if clear_rows:
+            table.clear_rows()
+
+        return table_str
+
+    def _get_key_and_table(
+            self,
+            table_name: str,
+            sub_method_level: int = 0) -> tuple[str, PrettyTable]:
+        key = self._get_table_key(table_name, sub_method_level)
         return key, self._pretty_table_dict.get(key)
 
     @classmethod
-    def _get_table_key(cls, name: str):
+    def _get_table_key(cls, name: str, sub_method_level: int = 0):
         s = stack()
-        row_index = 3
+        row_index = 3 + sub_method_level
         function_name = s[row_index][3]
         file_name = ntpath.basename(s[row_index][1])
         return f'{file_name}_{function_name}_{name}'
